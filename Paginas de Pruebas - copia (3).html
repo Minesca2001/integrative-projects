@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Asientos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        .controls button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .auditorium {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            max-width: 600px;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            background-color: #d3d3d3;
+            border: 1px solid #aaa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .seat.occupied {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .seat.reserved {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .seat:hover {
+            background-color: #90caf9;
+        }
+
+        @media (max-width: 768px) {
+            .auditorium {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .seat {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            .controls button {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auditorium {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .seat {
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
+            }
+
+            .controls button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestión de Asientos</h1>
+    <div class="controls">
+        <button id="exportSeats">Exportar Registros</button>
+        <button id="reserveSeats">Reservar Sección</button>
+        <input type="file" id="importSeats" style="display:none;">
+        <button id="importButton">Importar Disposición</button>
+    </div>
+    <div class="auditorium" id="auditorium"></div>
+    <p>Asientos Ocupados: <span id="occupiedCount">0</span></p>
+    <p>Asientos Disponibles: <span id="availableCount">100</span></p>
+
+    <script>
+        const rows = 20;
+        const cols = 10;
+        const auditorium = document.getElementById("auditorium");
+        let occupiedSeats = 0;
+
+        // Crear los asientos
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                const seat = document.createElement("div");
+                seat.className = "seat";
+                seat.dataset.row = i;
+                seat.dataset.col = j;
+                auditorium.appendChild(seat);
+
+                seat.addEventListener("click", () => {
+                    if (!seat.classList.contains("reserved")) {
+                        seat.classList.toggle("occupied");
+                        occupiedSeats += seat.classList.contains("occupied") ? 1 : -1;
+                        updateCounts();
+                    }
+                });
+            }
+        }
+
+        // Actualizar conteos
+        function updateCounts() {
+            document.getElementById("occupiedCount").textContent = occupiedSeats;
+            document.getElementById("availableCount").textContent = rows * cols - occupiedSeats;
+        }
+
+        // Resetear los asientos
+        function resetSeats() {
+            [...auditorium.children].forEach(seat => {
+                seat.classList.remove("occupied", "reserved");
+            });
+            occupiedSeats = 0;
+            updateCounts();
+        }
+
+        // Exportar registros
+        document.getElementById("exportSeats").addEventListener("click", () => {
+            const seatsData = [...auditorium.children].map(seat => ({
+                row: seat.dataset.row,
+                col: seat.dataset.col,
+                status: seat.classList.contains("occupied")
+                    ? "occupied"
+                    : seat.classList.contains("reserved")
+                    ? "reserved"
+                    : "available",
+            }));
+            const blob = new Blob([JSON.stringify(seatsData, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "auditorium-seats.json";
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // Reservar una sección
+        document.getElementById("reserveSeats").addEventListener("click", () => {
+            const startRow = parseInt(prompt("Ingrese la fila inicial (1-10):"), 10) - 1;
+            const endRow = parseInt(prompt("Ingrese la fila final (1-10):"), 10) - 1;
+            if (isNaN(startRow) || isNaN(endRow) || startRow < 0 || endRow >= rows || startRow > endRow) {
+                alert("Rango no válido.");
+                return;
+            }
+            const reservedSeats = [...auditorium.children].filter(
+                seat => seat.dataset.row >= startRow && seat.dataset.row <= endRow
+            );
+            reservedSeats.forEach(seat => {
+                if (!seat.classList.contains("occupied")) {
+                    seat.classList.add("reserved");
+                }
+            });
+        });
+
+        // Importar disposición
+        document.getElementById("importButton").addEventListener("click", () => {
+            document.getElementById("importSeats").click();
+        });
+
+        document.getElementById("importSeats").addEventListener("change", event => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const data = JSON.parse(e.target.result);
+                    resetSeats();
+                    data.forEach(seatData => {
+                        const seat = auditorium.querySelector(
+                            `[data-row='${seatData.row}'][data-col='${seatData.col}']`
+                        );
+                        if (seat && seatData.status === "occupied") {
+                            seat.classList.add("occupied");
+                            occupiedSeats++;
+                        } else if (seat && seatData.status === "reserved") {
+                            seat.classList.add("reserved");
+                        }
+                    });
+                    updateCounts();
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Clone</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --fb-blue: #1877f2;
+            --fb-gray: #f0f2f5;
+            --fb-dark: #1c1e21;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--fb-gray);
+        }
+
+        .navbar {
+            background: white;
+            padding: 8px 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            color: var(--fb-blue);
+            font-size: 2.5rem;
+        }
+
+        .search-bar {
+            background: var(--fb-gray);
+            border-radius: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            margin-left: 8px;
+            outline: none;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--fb-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-icon:hover {
+            background: #e4e6e9;
+        }
+
+        .main-content {
+            margin-top: 70px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .left-sidebar, .right-sidebar {
+            position: sticky;
+            top: 90px;
+        }
+
+        .create-post {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .post {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--fb-gray);
+        }
+
+        .post-content p {
+            margin: 10px 0;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fab fa-facebook"></i>
+        </div>
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar en Facebook">
+        </div>
+        <div class="nav-icons">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div class="nav-icon"><i class="fas fa-user-friends"></i></div>
+            <div class="nav-icon"><i class="fas fa-bell"></i></div>
+            <div class="nav-icon"><i class="fas fa-user"></i></div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Barra lateral izquierda -->
+        <div class="left-sidebar">
+            <div class="menu-item">
+                <i class="fas fa-user"></i>
+                <span>Tu perfil</span>
+            </div>
+        </div>
+
+        <!-- Contenido central -->
+        <div class="center-content">
+            <div class="create-post">
+                <div class="post-input">
+                    <input type="text" id="postInput" placeholder="¿Qué estás pensando?">
+                </div>
+            </div>
+
+            <div id="postsContainer"></div>
+        </div>
+
+        <!-- Barra lateral derecha -->
+        <div class="right-sidebar">
+            <div class="contacts-header">
+                <h3>Contactos</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Post {
+            constructor(content, author = 'Usuario') {
+                this.content = content;
+                this.author = author;
+                this.likes = 0;
+                this.comments = [];
+                this.timestamp = new Date();
+            }
+
+            like() {
+                this.likes++;
+            }
+
+            addComment(comment) {
+                this.comments.push(comment);
+            }
+        }
+
+        class FacebookClone {
+            constructor() {
+                this.posts = [];
+                this.initialize();
+            }
+
+            initialize() {
+                document.getElementById('postInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && e.target.value.trim()) {
+                        this.createPost(e.target.value);
+                        e.target.value = '';
+                    }
+                });
+
+                this.createPost('¡Bienvenidos a mi clon de Facebook!');
+            }
+
+            createPost(content) {
+                const post = new Post(content);
+                this.posts.unshift(post);
+                this.renderPosts();
+            }
+
+            renderPosts() {
+                const container = document.getElementById('postsContainer');
+                container.innerHTML = this.posts.map((post, index) => `
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="profile-img"></div>
+                            <div>
+                                <h4>${post.author}</h4>
+                                <small>${post.timestamp.toLocaleString()}</small>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>${post.content}</p>
+                        </div>
+                        <div class="post-footer">
+                            <button onclick="facebookApp.likePost(${index})" class="action-btn">
+                                <i class="fas fa-thumbs-up"></i> Me gusta (${post.likes})
+                            </button>
+                            <button onclick="facebookApp.commentPost(${index})" class="action-btn">
+                                <i class="fas fa-comment"></i> Comentar
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            likePost(index) {
+                this.posts[index].like();
+                this.renderPosts();
+            }
+
+            commentPost(index) {
+                const comment = prompt('Escribe tu comentario:');
+                if (comment) {
+                    this.posts[index].addComment(comment);
+                    alert('Comentario añadido');
+                }
+            }
+        }
+
+        const facebookApp = new FacebookClone();
+    </script>
+</body>
+</html>

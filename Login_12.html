@@ -1,0 +1,62 @@
+<!-- 12. Login con Autenticación de Dos Factores (2FA)
+
+- Este tipo de login añade un paso adicional donde el usuario recibe un código en su correo o teléfono para ingresar después de la contraseña. -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login con 2FA</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .login-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .code-box {
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>Login con 2FA</h2>
+        <input type="text" placeholder="Usuario">
+        <input type="password" placeholder="Contraseña">
+        <div class="code-box">
+            <p>Se ha enviado un código a su correo/telefono:</p>
+            <input type="text" placeholder="Ingrese el código de verificación">
+        </div>
+        <button>Verificar</button>
+    </div>
+</body>
+</html>

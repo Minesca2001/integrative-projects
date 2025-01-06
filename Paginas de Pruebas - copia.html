@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión del Auditorio</title>
+    <link rel="stylesheet" href="stylekjfdhskfs.css">
+    <script src="scripnz,t.js" defer></script>
+</head>
+<body>
+<style>
+/* Archivo: styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+.auditorium-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    gap: 5px;
+}
+
+.auditorium-grid div {
+    width: 30px;
+    height: 30px;
+    background-color: #ddd;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.auditorium-grid .reserved {
+    background-color: #f00;
+    color: white;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #333;
+    color: white;
+}
+</style>
+    <header>
+        <h1>Gestión de Auditorio</h1>
+        <nav>
+            <ul>
+                <li><a href="#reservar">Reservar Asientos</a></li>
+                <li><a href="#usuarios">Manejo de Usuarios</a></li>
+                <li><a href="#estadisticas">Estadísticas</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Sección de Reservar Asientos -->
+        <section id="reservar">
+            <h2>Reservar Asientos</h2>
+            <div class="auditorium-grid" id="auditorium-grid"></div>
+            <button id="save-seating">Guardar Disposición</button>
+        </section>
+
+        <!-- Sección de Manejo de Usuarios -->
+        <section id="usuarios">
+            <h2>Manejo de Usuarios</h2>
+            <form id="user-form">
+                <input type="text" id="username" placeholder="Nombre de usuario" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <select id="role">
+                    <option value="admin">Administrador</option>
+                    <option value="user">Usuario</option>
+                </select>
+                <button type="submit">Agregar Usuario</button>
+            </form>
+            <ul id="user-list"></ul>
+        </section>
+
+        <!-- Sección de Estadísticas -->
+        <section id="estadisticas">
+            <h2>Estadísticas</h2>
+            <div id="stats">
+                <p>Asientos reservados: <span id="reserved-count">0</span></p>
+                <p>Usuarios registrados: <span id="user-count">0</span></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Sistema de Gestión del Auditorio</p>
+    </footer>
+</body>
+<script>
+/* Archivo: script.js */
+// Auditoriums setup
+const auditoriumGrid = document.getElementById('auditorium-grid');
+const reservedCount = document.getElementById('reserved-count');
+const saveSeating = document.getElementById('save-seating');
+let reservedSeats = 0;
+
+// Render auditorium grid
+for (let i = 0; i < 100; i++) {
+    const seat = document.createElement('div');
+    seat.textContent = i + 1;
+    seat.addEventListener('click', () => {
+        seat.classList.toggle('reserved');
+        reservedSeats += seat.classList.contains('reserved') ? 1 : -1;
+        reservedCount.textContent = reservedSeats;
+    });
+    auditoriumGrid.appendChild(seat);
+}
+
+// Save seating arrangement
+saveSeating.addEventListener('click', () => {
+    const seatingArrangement = Array.from(auditoriumGrid.children).map(seat =>
+        seat.classList.contains('reserved') ? 1 : 0
+    );
+    console.log('Seating arrangement saved:', seatingArrangement);
+});
+
+// User Management
+const userForm = document.getElementById('user-form');
+const userList = document.getElementById('user-list');
+const userCount = document.getElementById('user-count');
+let users = [];
+
+userForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value;
+
+    users.push({ username, role });
+    userList.innerHTML += `<li>${username} (${role})</li>`;
+    userCount.textContent = users.length;
+
+    userForm.reset();
+});
+</script>
+</html>
