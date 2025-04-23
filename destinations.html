@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinos Fantásticos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/destinations.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Agencia de Viajes Fantástica</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <h1>Nuestros Destinos</h1>
+        <div id="destinations-container" class="row">
+            <!-- Destinos cargados dinámicamente -->
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="vendors/jquery/jquery.min.js"></script>
+    <script src="vendors/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script> <!-- Carga directa de allPackages -->
+
+    <script>
+        $(document).ready(function () {
+            function getParameterByName(name, url = window.location.href) {
+                name = name.replace(/[\[\]]/g, '\\$&');
+                const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+                const results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            function loadDestinations() {
+                const destinationName = getParameterByName('destination');
+                const destinationsContainer = $('#destinations-container');
+                destinationsContainer.empty();
+
+                if (typeof allPackages === 'undefined') {
+                    destinationsContainer.html('<p>Error: No se pudieron cargar los destinos.</p>');
+                    return;
+                }
+
+                if (!destinationName) {
+                    destinationsContainer.html('<p>Por favor, seleccione un destino.</p>');
+                    return;
+                }
+
+                const selectedPackages = allPackages.filter(pkg => pkg.destination === destinationName);
+
+                if (selectedPackages.length === 0) {
+                    destinationsContainer.html('<p>Destino no encontrado.</p>');
+                    return;
+                }
+
+                selectedPackages.forEach(pkg => {
+                    destinationsContainer.append(`
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h2>${pkg.destination}</h2>
+                            </div>
+                        </div>
+                    `);
+
+                    const sites = pkg.description.split('. ');
+
+                    sites.forEach(site => {
+                        const titleRegex = /<b>(.*?)<\/b>:(.*)/;
+                        const match = site.match(titleRegex);
+
+                        if (match) {
+                            const title = match[1];
+                            const description = match[2].trim();
+
+                            destinationsContainer.append(`
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-text">${description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        } else {
+                            destinationsContainer.append(`
+                                <div class="col-md-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p class="card-text">${site}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    });
+                });
+            }
+
+            loadDestinations();
+        });
+    </script>
+</body>
+
+</html>
