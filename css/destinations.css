@@ -1,0 +1,41 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #e9ecef !important;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.container {
+    max-width: 960px;
+}
+
+h1 {
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+    color: #007bff;
+}
+
+.list-group-item {
+    border-color: #f8f9fa;
+}
+
+.card img {
+    object-fit: cover; /* Ensure images fill the space without distortion */
+    height: 20px;       /* Fixed height for the images */
+}

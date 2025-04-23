@@ -1,0 +1,225 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+}
+
+.header-gradient {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+}
+
+.navbar {
+    transition: background-color 0.3s ease;
+}
+
+.navbar .nav-link {
+    transition: color 0.3s ease, transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    margin: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background-color: var(--bs-navbar-active-color, #0d6efd);
+    transition: left 0.3s ease;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    transform: translateY(-2px);
+}
+.navbar .nav-link:hover::after,
+.navbar .nav-link:focus::after {
+    left: 0;
+}
+.navbar .nav-link.active {
+    font-weight: bold;
+}
+
+h2 {
+    color: #0a58ca;
+    font-weight: 600;
+}
+
+.carousel-container {
+    padding-bottom: 1rem;
+}
+
+img {
+    height: auto;
+    width: 20px;
+}
+.image-carousel .slick-slide {
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.image-carousel svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-carousel .slick-slide:hover svg {
+    transform: scale(1.03);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.slick-prev, .slick-next {
+    z-index: 1;
+}
+.slick-prev:before, .slick-next:before {
+    color: var(--bs-primary);
+    font-size: 30px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+.slick-prev:hover:before, .slick-next:hover:before {
+    opacity: 1;
+}
+
+.slick-dots {
+    bottom: -25px;
+}
+.slick-dots li button:before {
+    font-size: 12px;
+    color: var(--bs-primary);
+    opacity: 0.5;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+.slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: #0a58ca;
+}
+
+#packages-list {
+    transition: opacity 0.3s ease-in-out;
+    min-height: 100px;
+}
+#packages-list.filtering {
+    opacity: 0.5;
+}
+
+.package-card {
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.package-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.package-card .card-img-top {
+    height: 180px;
+   
+    border-bottom: 1px solid #eee;
+}
+
+.package-card .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.package-card .card-title {
+    color: var(--bs-primary);
+}
+
+.package-card .card-text {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.package-card .card-footer {
+    background-color: transparent;
+    border-top: none;
+    padding: 0;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.package-card .destination-tag {
+    display: inline-block;
+    background-color: #e2e6ea;
+    color: #495057;
+    padding: 0.3rem 0.7rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+
+.no-results-message, .loading-message {
+    padding: 2rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+footer {
+    font-size: 0.9rem;
+}
+
+.continent-heading {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+#packages-list > .col .package-card.animate-on-scroll {
+    transition-delay: calc(var(--animation-order, 0) * 50ms);
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    h1.display-4 {
+        font-size: 2.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-gradient {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+    h1.display-4 {
+        font-size: 2.2rem;
+    }
+    .lead {
+        font-size: 1rem;
+    }
+    .image-carousel .slick-prev, .image-carousel .slick-next {
+        display: none !important;
+    }
+    .slick-dots {
+        bottom: -20px;
+    }
+}
